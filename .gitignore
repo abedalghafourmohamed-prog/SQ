@@ -2,3 +2,10 @@ __pycache__/
 .env
 README.md
 try.py
+.github\workflows\dedupe_property_r2.yml
+.github\workflows\fix_property_r2_merge.yml
+.github\workflows\r2_cleanup.yml
+dedupe_property_r2.py
+fix_property_r2_merge.py
+r2_cleanup_images.py
+
