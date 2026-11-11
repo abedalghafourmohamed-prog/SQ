@@ -8,4 +8,5 @@ try.py
 dedupe_property_r2.py
 fix_property_r2_merge.py
 r2_cleanup_images.py
-
+check_cols.py
+report.xlsx
