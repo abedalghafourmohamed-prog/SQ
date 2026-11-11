@@ -3,8 +3,8 @@ site_id: qatarsale-QA
 display_name: QatarSale Qatar
 website: qatarsale.com/ar/home
 country: Qatar
-github_username: devops5796-netizen
-repo: QS
+github_username: abedalghafourmohamed-prog
+repo: SQ
 run_place: github
 uses_proxy: false
 r2_prefix: qatarsale
