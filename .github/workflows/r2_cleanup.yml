@@ -1,0 +1,62 @@
+name: R2 Cleanup (images + columns)
+
+# Manual trigger only — you choose dry-run, base prefix, date, and which
+# category names to skip, each time you run it from the Actions tab.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (true = just print what would change, false = actually delete/modify)"
+        required: true
+        type: boolean
+        default: true
+      base_prefix:
+        description: "Base prefix on the bucket, e.g. DOMAN/ or DKSA/ or qatarsale/"
+        required: true
+        type: string
+        default: "DOMAN/"
+      date:
+        description: "Optional single date, e.g. year=2026/month=08/day=27/  (leave empty = ALL dates)"
+        required: false
+        type: string
+        default: ""
+      skip_categories:
+        description: "Comma-separated category names to never touch"
+        required: false
+        type: string
+        default: "vip-car-plates,services,land-for-sale"
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install boto3 openpyxl
+
+      - name: Run cleanup script
+        env:
+          CF_R2_ACCESS_KEY_ID: ${{ secrets.CF_R2_ACCESS_KEY_ID }}
+          CF_R2_SECRET_ACCESS_KEY: ${{ secrets.CF_R2_SECRET_ACCESS_KEY }}
+          CF_R2_ENDPOINT_URL: ${{ secrets.CF_R2_ENDPOINT_URL }}
+          CF_R2_BUCKET_NAME: ${{ secrets.CF_R2_BUCKET_NAME }}
+        run: |
+          ARGS="--base-prefix ${{ inputs.base_prefix }}"
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "${{ inputs.date }}" ]; then
+            ARGS="$ARGS --date ${{ inputs.date }}"
+          fi
+          if [ -n "${{ inputs.skip_categories }}" ]; then
+            ARGS="$ARGS --skip-categories ${{ inputs.skip_categories }}"
+          fi
+          echo "Running: python r2_cleanup_images.py $ARGS"
+          python r2_cleanup_images.py $ARGS
