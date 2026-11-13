@@ -67,6 +67,7 @@ from r2_file_counter import (
     count_site_r2_inventory,
 )
 from github_workflows import build_scraper_run_meta, merge_registry_site
+from website_ads import website_published_ads_report
 from monitor_r2 import (
     build_r2_client,
     load_registry_from_r2,
@@ -1473,6 +1474,12 @@ def main():
     }
 
     scrapers_cfg = config.get("scrapers", [])
+    website_ads_cfg = config.get("website_published_ads")
+    if website_ads_cfg is not None:
+        full_report.update(
+            website_published_ads_report(website_ads_cfg, scrapers_cfg, listing_date_str)
+        )
+
     log.info(f"Processing {len(scrapers_cfg)} scrapers …")
 
     for scraper_cfg in scrapers_cfg:

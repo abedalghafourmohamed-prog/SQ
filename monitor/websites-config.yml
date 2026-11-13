@@ -7,6 +7,21 @@ meta:
   r2_bucket: "data-collection-dl"                 # Your R2 bucket name (same as CF_R2_BUCKET_NAME secret)
   r2_prefix: "qatarsale"                    # Fixed prefix inside the bucket
 
+# Website source count for product ads. startDate is the website's ISO-8601 UTC
+# publication timestamp; categories are read from the product scraper URLs below.
+website_published_ads:
+  source: qatarsale_products_api
+  api_url: https://production-api.qatarsale.com/api/v2/Products
+  website_origin: https://qatarsale.com
+  website_host: qatarsale.com
+  category_path_prefix: /ar/products/
+  publication_date_field: startDate
+  id_field: id
+  page_size: 500
+  category_query_defaults:
+    "basic_search:StatusFilter": 0
+  request_interval_seconds: 1.2
+
 # ------------------------------------------------------------
 # SCRAPERS — 11 categories across 1 batche
 # ------------------------------------------------------------
